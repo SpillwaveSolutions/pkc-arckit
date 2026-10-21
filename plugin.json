@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "pkc-arckit",
+  "version": "0.1.0",
+  "description": "Plan a deterministic import of native ArcKit requirements, decision records, and risks into Project Knowledge Capture.",
+  "license": "MIT",
+  "skills": ["skills/pkc-arckit-import"],
+  "dependencies": ["project-knowledge-capture", "okf-graph-eng"]
+}

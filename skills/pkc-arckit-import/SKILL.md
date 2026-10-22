@@ -13,4 +13,4 @@ python3 -m pkc_arckit.cli plan <arckit-root>
 
 Refuse the write when `--pkc-root` is absent. Do not invent concepts for headings that failed. Do not delete a concept that disappeared from the source. Leave `verified` false.
 
-Phase 2 journey import is not this skill.
+Phase 2 journey import is a separate command, `product`. It validates a backlog and stops. It does not call `pkc_capture.py prd`.

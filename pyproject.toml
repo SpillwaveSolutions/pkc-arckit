@@ -1,6 +1,6 @@
 [project]
 name = "pkc-arckit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Deterministic Phase 1 importer from native ArcKit Markdown into Project Knowledge Capture."
 readme = "README.md"
 requires-python = ">=3.11"

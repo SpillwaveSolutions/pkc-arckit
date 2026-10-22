@@ -4,7 +4,8 @@ This repository is the ArcKit adapter. It is not part of Project Knowledge Captu
 
 ## Rules
 
-- Phase 1 imports `REQ`, `ADR`, and `RISK` only.
+- Phase 2 may validate backlog JSON and report a candidate journey. It must not call `pkc_capture.py prd` while that command creates a Feature from the stage title.
+- Do not treat a stakeholder driver, goal, or outcome as a persona.
 - Parse native `ARC-*.md`. Do not parse ArcKit's OKF export.
 - Do not write `Persona`, `UserJourney`, `JourneyStage`, `Scenario`, `UserStory`, `Feature`, Epic, or a WikiTicket `Story`.
 - Do not infer a persona, a goal, or a journey stage.

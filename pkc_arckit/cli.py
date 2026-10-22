@@ -10,6 +10,7 @@ from pathlib import Path
 from pkc_arckit import __version__
 from pkc_arckit.apply import PkCUnavailable, apply_plan
 from pkc_arckit.engine import discover, dump_plan, plan_paths
+from pkc_arckit.phase2 import product_from_files
 
 
 def _pinned(path: Path | None) -> dict[str, str]:
@@ -33,7 +34,48 @@ def main(argv: list[str] | None = None) -> int:
     plan.add_argument("--pkc-root", type=Path, default=None)
     plan.add_argument("--author", default="pkc-arckit")
 
+    product = sub.add_parser("product", help="Validate a backlog. Does not call PKC prd.")
+    product.add_argument("root", type=Path)
+    product.add_argument("--backlog", type=Path, required=True)
+    product.add_argument("--requirements", type=Path, default=None)
+    product.add_argument("--stakeholders", type=Path, default=None)
+    product.add_argument("--bundle", type=Path, default=None)
+
     args = parser.parse_args(argv)
+    if args.cmd == "product":
+        root = args.root.resolve()
+        backlog = args.backlog if args.backlog.is_absolute() else root / args.backlog
+        requirements = None
+        if args.requirements is not None:
+            requirements = args.requirements if args.requirements.is_absolute() else root / args.requirements
+        stakeholders = None
+        if args.stakeholders is not None:
+            stakeholders = args.stakeholders if args.stakeholders.is_absolute() else root / args.stakeholders
+        try:
+            result = product_from_files(
+                root,
+                backlog,
+                requirements=requirements,
+                stakeholders=stakeholders,
+                bundle=args.bundle,
+            )
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        payload = {
+            "status": result.status,
+            "stop_reason": result.stop_reason,
+            "prd_called": result.prd_called,
+            "errors": result.errors,
+            "personas": result.personas,
+            "ignored": result.ignored,
+            "held": result.held,
+            "journey": result.journey,
+        }
+        json.dump(payload, sys.stdout, indent=2)
+        sys.stdout.write("\n")
+        return 0 if result.status in {"missing stage", "stopped", "held"} and not result.prd_called else 1
+
     root = args.root.resolve()
     paths = args.paths or discover(root)
     if args.paths:

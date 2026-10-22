@@ -2,11 +2,21 @@
 
 Deterministic importer from native ArcKit Markdown into [Project Knowledge Capture](https://github.com/SpillwaveSolutions/project-knowledge-capture) (PKC).
 
-Version 0.1.0 is Phase 1 only. It reads requirements, architecture decision records, and risk registers. It does not import journeys, backlogs, or ArcKit's OKF export.
+Version 0.2.0 keeps the Phase 1 importer and adds a Phase 2 product gate. Phase 1 reads requirements, architecture decision records, and risk registers. It does not import ArcKit's OKF export.
 
 PKC owns the concepts and the write. This repository does not modify PKC.
 
-## What 0.1.0 does
+Phase 2 validates an ArcKit backlog JSON file. Stakeholder drivers, goals, and outcomes are read and then ignored. They are not personas. The command does not call `pkc_capture.py prd`.
+
+PKC's journey capture creates a Feature from the stage title. ArcKit's backlog stories do not name a journey stage. Until a story names a stage and PKC can attach that stage to an existing node, this command stops:
+
+```bash
+python3 -m pkc_arckit.cli product /path/to/arckit-root --backlog projects/001-example/ARC-001-BKLG-v1.0.json
+```
+
+A stopped plan can include a candidate journey object. That object has no `feature` field and no `requirement` field. It is not written.
+
+## What Phase 1 does
 
 - Parses the compact requirements table (`ID`, `Requirement`, `Priority`) and the heading grammar (`**Name**:` or `**Name:**`).
 - Plans one `Requirement` per `BR`, `FR`, `NFR`, `INT`, and `DR` row or heading.
